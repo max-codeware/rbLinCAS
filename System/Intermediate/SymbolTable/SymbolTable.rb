@@ -134,13 +134,19 @@ class SymbolTable < Hash
   def lookUpVoid(name)
     path       = @currentPath.clone
     globalPath = findGlobalPath
-    cEntry = get(path)
-    entry = checkEntry(cEntry.lookUpLocal(name))
-    return entry if entry
-    while path != globalPath
-      path.exitName
+    if ! path.empty? then
       cEntry = get(path)
       entry = checkEntry(cEntry.lookUpLocal(name))
+      return entry if entry
+      while path != globalPath
+        path.exitName
+        cEntry = get(path)
+        entry = checkEntry(cEntry.lookUpLocal(name))
+        return entry if entry
+      end
+    else
+      entry = lookUpLocal(name)
+      entry = checkEntry(entry)
       return entry if entry
     end
     nil
@@ -180,10 +186,10 @@ private
   # Finds the nearest global scope (eg. of a class) walking backward
   # on the path
   def findGlobalPath
-    terminate  = [:CLASS,:MODULE]
+    terminate  = [Def.CLASS,Def.MODULE]
     path       = @currentPath.clone
     entry      = get(path)
-    definition = entry.getDef
+    definition = entry.getDef unless path.empty?
     while !(path.empty?) and !(terminate.include? definition)
       path.exitName
       entry      = get(path)

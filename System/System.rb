@@ -9,6 +9,7 @@ module System
   module Accessory
     %w|Accessories/Enum.rb Accessories/SymTabPrinter.rb
        Accessories/ICodePrinter.rb Accessories/VoidBuffPrinter.rb
+       Accessories/Definitions.rb
        Accessories/Type.rb Accessories/VoidType.rb|.each do |file|
     
       require_relative File.expand_path(file,File.dirname(__FILE__))
@@ -53,7 +54,6 @@ module System
        Frontend/Tokens/EofToken.rb Frontend/Tokens/ErrorToken.rb
        Frontend/Tokens/SpecialCharsToken.rb Frontend/ErrorHandler.rb
        Frontend/Scanner.rb Frontend/Parsers/ParserEnums.rb Frontend/Parsers/SyncSets.rb
-       Frontend/Parsers/ParsingState.rb 
        Frontend/Parsers/Parser.rb Frontend/Parsers/TDparser.rb
        Frontend/Parsers/StatementParser.rb Frontend/Parsers/ExpressionParser.rb
        Frontend/Parsers/IDparser.rb

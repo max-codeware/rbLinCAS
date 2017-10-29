@@ -1,14 +1,5 @@
 #! /usr/bin/env ruby
 
-class Enum
-  private
-    def self.enum_attr(name,value = nil)
-      define_method(name) do
-        return name if value == nil
-        return value
-      end
-    end    
-end
 ##
 #
 # Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
@@ -19,3 +10,5 @@ class SymbolTabKey < Enum
   enum_attr :ICODE
   enum_attr :PARENT
 end
+
+SymTabKey = SymbolTabKey.new

@@ -2,7 +2,7 @@
 
 require_relative "System/System.rb"
 
-filepath = File.expand_path("Tests/Test10.txt",File.dirname(__FILE__))
+filepath = File.expand_path("Tests/Test9.txt",File.dirname(__FILE__))
 reader = FendGen.generateReader(filepath)
 source = FendGen.generateSource(reader)
 parser = FendGen.generateParser(source)
@@ -46,11 +46,11 @@ end
 parser.addMsgListener(ParserListener.new)
 parser.parse
 iCode    = parser.getICode
-voidBuff = parser.getVoidBuff
+#voidBuff = parser.getVoidBuff
 iCodePrinter    = ICodePrinter.new
-voidBuffPrinter = VoidBuffPrinter.new
+#voidBuffPrinter = VoidBuffPrinter.new
 iCodePrinter.printICode(iCode)
-voidBuffPrinter.printBuff(voidBuff)
+#voidBuffPrinter.printBuff(voidBuff)
 source.close
 
 

@@ -144,9 +144,9 @@ class IDparser < ExpressionParser
         return methodName
       end
       name = token.getText
-      if @@voidBuff.definedLocally?(name)
-        methodName.setAttr(ICKey.ID,name)
-        methodName.setAttr(ICKey.OWNER_NAME,topName)
+      id = @@symTab.lookUpVoid(name)
+      if id then
+        methodName.setAttr(ICKey.ID_PATH,id.getPath)
       else
         @errHandler.flag(token,ErrCode.UNDEF_VOID,self)
         methodName.setAttr(ICKey.ID,name)
@@ -163,7 +163,7 @@ class IDparser < ExpressionParser
         tkType = token.getType
       end
       methodName = ICodeGen.generateNode(ICodeNType.METHOD_NAME)
-      if ! tkType == TkType.L_IDENT then
+      if !(tkType == TkType.L_IDENT) then
         @errHandler.flag(token,ErrCode.INVALID_CALL_NAME,self)
         methodName.setAttr(ICKey.ID,"dummyName")      
       else
@@ -190,67 +190,57 @@ class IDparser < ExpressionParser
     
     def parseLIdent(token)
       name = token.getText
-      if not @@sym then
-          
-        df = @@symbolTabStack.lookUpLocal(name)
+      if not @@sym then 
+        df = @@symTab.lookUpLocal(name)
         if not df then
           @errHandler.flag(token,ErrCode.UNDEF_IDENT,self) unless @ignoreUndef
-          df = @@symbolTabStack.enterLocal(name)
-          df.setDef(Tp.UNDEF)
+          df = @@symTab.enterLocal(name)
+          df.setDef(Def.L_IDENT)
+          df.setAttr(SymTabKey.TYPE,Tp.UNDEF)
         end
-          
-        root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
         df.addLineNum(token.getLine)
-        root.setAttr(ICKey.ID,df)
-                 
-       else
-          
-         root = ICodeGen.generateNode(ICodeNType.SVARIABLE)
-         root.setAttr(ICKey.ID,name)
-          
-       end
-       root
-     end
+        root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
+        root.setAttr(ICKey.ID_PATH,df)       
+      else 
+        root = ICodeGen.generateNode(ICodeNType.SVARIABLE)
+        root.setAttr(ICKey.ID,name)    
+      end
+      root
+    end
      
-     def parseGIdent(token)
-       name = token.getText
-       stateLevel = getStateLevel
-       nestingLevel = @@symbolTabStack.getCurrentNLevel
-       while getStateAt(stateLevel) == ParsingSt.VOID
-         stateLevel   -= 1
-         nestingLevel -= 1
-       end
-       id = @@symbolTabStack.lookUp(name,nestingLevel)
-       if ! id then
-         @errHandler.flag(token,ErrCode.UNDEF_IDENT,self) unless @ignoreUndef
-         id = @@symbolTabStack.enterAt(name,nestingLevel)
-         id.setDef(Tp.UNDEF)
-       end
-       
-       root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
-       id.addLineNum(token.getLine)
-       root.setAttr(ICKey.ID,id)
-       root
-     end
-     
-     def parseNameSpace(token)
-       node = ICodeGen.generateNode(ICodeNType.NAMESPACE)
-       name = ICodeGen.generateNode(ICodeNType.NAME)
-       name.setAttr(ICKey.ID,token.getText)
-       node.addBranch(name)
-       token  = currentTk
-       tkType = token.getType
-       while tkType == TkType.COLON and not token.is_a? EolToken
-         token  = nextTk
-         tkType = token.getType
-         @errHandler.flag(token,ErrCode.MISSING_NAME,self) if tkType != TkType.NAME
-         name = ICodeGen.generateNode(ICodeNType.NAME)
-         name.setAttr(ICKey.ID,token.getText)
-         node.addBranch(name)
-         token  = nextTk
-         tkType = token.getType
-       end
-       node
-     end
-
+    def parseGIdent(token)
+      name = token.getText
+      id = @@symTab.lookUpGlobal(name)
+      if ! id then
+        @errHandler.flag(token,ErrCode.UNDEF_IDENT,self) unless @ignoreUndef
+        id = @@symTab.enterGlobal(name)
+        id.setDef(Def.G_IDENT)
+        id.setAttr(SymTabKey.TYPE,Tp.UNDEF)
+      end
+      id.addLineNum(token.getLine)
+      root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
+      root.setAttr(ICKey.ID_PATH,id.getPath)
+      root
+    end
+    
+    def parseNameSpace(token)
+      node = ICodeGen.generateNode(ICodeNType.NAMESPACE)
+      name = ICodeGen.generateNode(ICodeNType.NAME)
+      name.setAttr(ICKey.ID,token.getText)
+      node.addBranch(name)
+      token  = currentTk
+      tkType = token.getType
+      while tkType == TkType.COLON and not token.is_a? EolToken
+        token  = nextTk
+        tkType = token.getType
+        @errHandler.flag(token,ErrCode.MISSING_NAME,self) if tkType != TkType.NAME
+        name = ICodeGen.generateNode(ICodeNType.NAME)
+        name.setAttr(ICKey.ID,token.getText)
+        node.addBranch(name)
+        token  = nextTk
+        tkType = token.getType
+      end
+      node
+    end
+    
 end
