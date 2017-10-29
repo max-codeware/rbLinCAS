@@ -1,0 +1,36 @@
+
+/* This is a global test */
+
+b := 2 ^ 2; a := 0
+
+do while a < b { 
+  a += 1 
+}
+
+s := 0
+
+
+if s > b then {
+  c := 0
+} 
+elsif s < b then {
+  c := 2
+}
+else {
+  c := 1
+}
+
+x := false
+
+do { 
+ a := 1
+ b := 3
+ c := 2
+} until x
+
+for i : 1 to 10 {
+  c := true
+  if c then {
+    c := 2
+  }
+}

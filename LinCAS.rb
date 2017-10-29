@@ -2,7 +2,7 @@
 
 require_relative "System/System.rb"
 
-filepath = File.expand_path("Test10.txt",File.dirname(__FILE__))
+filepath = File.expand_path("Tests/Test10.txt",File.dirname(__FILE__))
 reader = FendGen.generateReader(filepath)
 source = FendGen.generateSource(reader)
 parser = FendGen.generateParser(source)

@@ -1,0 +1,7 @@
+
+/*
+ Assign test
+*/
+
+b := a == b || (false && true) &&
+!(s)

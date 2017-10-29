@@ -1,0 +1,30 @@
+
+/*commento
+  multi
+  linea
+*/
+
+FOR i FROM 0 TO 3
+{
+  @k += 1 
+}
+
+local_Var
+
+@_Global
+:
+
+xy k
+
+/*special Chars*/
+
++= -= + <> >< >= <= % 6 & $
+
+IF log THEN
+( );
+
+"This Is a string"
+
+/*wrong Tokens*/
+
+2. @2 "unexpected eof
