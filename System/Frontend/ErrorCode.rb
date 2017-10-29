@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class ErrorCode < Enum
   enum_attr :UNEXPECTED_EOF,   "Unexpected end-of-file"
   enum_attr :UNEXPECTED_EOL,   "Unexpected end-of-line"

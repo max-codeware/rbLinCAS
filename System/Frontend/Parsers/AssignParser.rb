@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class AssignParser < TDparser
 
   ASSIGN_TK  = [TkType.COLON_EQ, TkType.PLUS_EQ,

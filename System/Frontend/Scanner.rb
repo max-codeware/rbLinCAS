@@ -1,6 +1,9 @@
 #! /usr/bin/env ruby
-#require 'pry-byebug'
-#binding.pry
+
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class Scanner < MessageGenerator
   
   EOF = 3.chr

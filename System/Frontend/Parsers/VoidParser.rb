@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class VoidTag < Enum
 
  enum_attr :DECLARED
@@ -9,6 +13,10 @@ class VoidTag < Enum
 end
 VTag = VoidTag.new
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class VoidParser < TDparser
 
   VOID_SYNC_SET = [TkType.L_PAR,TkType.R_PAR,TkType.AHEAD,

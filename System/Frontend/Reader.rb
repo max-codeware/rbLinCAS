@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class Reader < MessageGenerator
 
   def initialize(filename)
@@ -33,6 +37,10 @@ class Reader < MessageGenerator
   
   private
     
+    ##
+    #
+    # Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+    # License:: Distributed under MIT license
     class ReaderListener
     
       IO_ERROR_FORMAT = "%s: %s"

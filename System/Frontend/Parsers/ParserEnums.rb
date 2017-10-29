@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class MathFunctEnum < Enum
 
  private
@@ -33,7 +37,10 @@ class MathFunctEnum < Enum
 end
 MathFunct = MathFunctEnum.new
 
-
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class ProductOp < Enum
 
   private
@@ -62,7 +69,10 @@ class ProductOp < Enum
 end
 ProdOp = ProductOp.new
 
-
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class SumOp < Enum
 
   private
@@ -89,7 +99,10 @@ class SumOp < Enum
 end
 AddOp = SumOp.new
 
-
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class OpOpTranslator < Enum
 
   private
@@ -131,7 +144,10 @@ class OpOpTranslator < Enum
 end
 OpOpTr = OpOpTranslator.new
 
-
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class BooleanOpTr < Enum
 
   private

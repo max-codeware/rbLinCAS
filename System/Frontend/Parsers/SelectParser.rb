@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class SelectParser < TDparser
 
   SELECT_SYNC_SET = [TkType.L_IDENT,

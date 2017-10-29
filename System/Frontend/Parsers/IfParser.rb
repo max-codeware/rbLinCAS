@@ -1,5 +1,9 @@
 #! /usr/bin/env ruby
 
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class IfParser < TDparser
 
   IF_SYNC_SET = STMT_BEG_SET + STMT_MID_SET + [TkType.THEN,TkType.ELSIF]
