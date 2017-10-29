@@ -1,0 +1,20 @@
+
+/* case test */
+
+x := 3
+select x {
+
+  case 1,2 {
+  }
+  
+  case 3 {
+  }
+  
+  case "ciao"
+  {
+  }
+  
+  else {
+  }
+
+}
