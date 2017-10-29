@@ -24,16 +24,14 @@ module System
   
   module Intermediate
     include System::Accessory
-    %w|Intermediate/SymbolTable/SymbolTabKey.rb
-       Intermediate/SymbolTable/SymbolTabStack.rb
-       Intermediate/SymbolTable/SymbolTab.rb
+    %w|Intermediate/SymbolTable/SymTabKey.rb
+       Intermediate/SymbolTable/SymTabPath.rb
+       Intermediate/SymbolTable/SymbolTable.rb
        Intermediate/SymbolTable/SymbolTabEntry.rb
-       Intermediate/SymbolTable/SymbolTabGen.rb
-       Intermediate/Icode/ICodeKey.rb Intermediate/Icode/ICodeNode.rb
-       Intermediate/Icode/ICodeNodeType.rb Intermediate/Icode/ICode.rb
-       Intermediate/Icode/ICodeGen.rb Intermediate/VoidTable/VoidDef.rb
-       Intermediate/VoidTable/VoidTable.rb Intermediate/VoidTable/VoidTableBuffer.rb
-       Intermediate/VoidTable/VoidTabGen.rb|.each do |file|
+       Intermediate/SymbolTable/SymTabGen.rb
+       Intermediate/ICode/ICodeKey.rb Intermediate/ICode/ICodeNode.rb
+       Intermediate/ICode/ICodeNodeType.rb Intermediate/ICode/ICode.rb
+       Intermediate/ICode/ICodeGen.rb|.each do |file|
        
          require_relative File.expand_path(file,File.dirname(__FILE__))
          
