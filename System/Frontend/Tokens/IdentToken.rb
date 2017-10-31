@@ -29,11 +29,7 @@ class IdentToken < Token
           @type = TkType.G_IDENT
         else
           @type = TkType.getTypeOf @text
-          if @text[0] < "a"
-            @type = TkType.NAME unless @type
-          else
-            @type = TkType.L_IDENT unless @type
-          end
+          @type = TkType.L_IDENT unless @type
       end
     end
   end

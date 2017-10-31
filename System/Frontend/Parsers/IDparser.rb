@@ -22,6 +22,30 @@ class IDparser < ExpressionParser
  private
  
     def parseID(token)
+      node  = parseBeg(token)
+      loop do
+        token = currentTk
+        tkType = token.getType
+        case tkType
+          when TkType.DOT
+            callNode = ICodeGen.generateNode(ICodeNType.METHOD_CALL)
+            callNode.addBranch(node)
+            callNode = parseMethodCall(token,callNode)
+            node     = callNode
+          when TkType.COLON
+            node = parseNameSpace(token,node)
+          when TkType.L_BRACKET
+            callNode = ICodeGen.generateNode(ICodeNType.INDEX_CALL)
+            callNode.addBranch(node)
+            callNode.addBranch(parseIndex(token))
+            node = callNode
+          else
+            return node
+        end
+      end
+    end
+ 
+    def parseBeg(token)
       idToken = token
       token  = nextTk
       tkType = token.getType
@@ -33,14 +57,7 @@ class IDparser < ExpressionParser
           callNode.addBranch(id)
           callNode = parseMethodCall(token,callNode)
         when TkType.COLON
-          id = parseNameSpace(idToken)
-          callNode = ICodeGen.generateNode(ICodeNType.METHOD_CALL)
-          callNode.addBranch(id)
-          token  = currentTk
-          tkType = token.getType
-          if tkType == TkType.DOT
-            callNode = parseMethodCall(token,callNode)
-          end
+          callNode = parseNameSpace(idToken)
         when TkType.L_PAR
           @ignoreUndef = false
           methodName = lookUpVoid(idToken)
@@ -163,6 +180,10 @@ class IDparser < ExpressionParser
         tkType = token.getType
       end
       methodName = ICodeGen.generateNode(ICodeNType.METHOD_NAME)
+      if tkType == TkType.EOL then
+        @errHandler.flag(token,ErrCode.UNEXPECTED_EOL,self)
+        return callNode
+      end
       if !(tkType == TkType.L_IDENT) then
         @errHandler.flag(token,ErrCode.INVALID_CALL_NAME,self)
         methodName.setAttr(ICKey.ID,"dummyName")      
@@ -197,6 +218,7 @@ class IDparser < ExpressionParser
           df = @@symTab.enterLocal(name)
           df.setDef(Def.L_IDENT)
           df.setAttr(SymTabKey.TYPE,Tp.UNDEF)
+          @@symTab.exitLocal
         end
         df.addLineNum(token.getLine)
         root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
@@ -216,30 +238,36 @@ class IDparser < ExpressionParser
         id = @@symTab.enterGlobal(name)
         id.setDef(Def.G_IDENT)
         id.setAttr(SymTabKey.TYPE,Tp.UNDEF)
+        @@symTab.exitLocal
       end
       id.addLineNum(token.getLine)
-      root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
+      root = ICodeGen.generateNode(ICodeNType.GVARIABLE)
       root.setAttr(ICKey.ID_PATH,id.getPath)
       root
     end
     
-    def parseNameSpace(token)
+    def parseNameSpace(token,beginning = nil)
       node = ICodeGen.generateNode(ICodeNType.NAMESPACE)
-      name = ICodeGen.generateNode(ICodeNType.NAME)
-      name.setAttr(ICKey.ID,token.getText)
-      node.addBranch(name)
+      if beginning
+        node.addBranch(beginning) 
+      else
+        name = ICodeGen.generateNode(ICodeNType.NAME)
+        name.setAttr(ICKey.ID,token.getText)
+        node.addBranch(name)
+      end
       token  = currentTk
       tkType = token.getType
       while tkType == TkType.COLON and not token.is_a? EolToken
         token  = nextTk
         tkType = token.getType
-        @errHandler.flag(token,ErrCode.MISSING_NAME,self) if tkType != TkType.NAME
+        @errHandler.flag(token,ErrCode.MISSING_NAME,self) if tkType != TkType.L_IDENT
         name = ICodeGen.generateNode(ICodeNType.NAME)
         name.setAttr(ICKey.ID,token.getText)
         node.addBranch(name)
         token  = nextTk
         tkType = token.getType
       end
+      node.setAttr(ICKey.PATH,@@symTab.getCurrentPath.clone) unless beginning
       node
     end
     

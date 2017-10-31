@@ -7,7 +7,6 @@ reader = FendGen.generateReader(filepath)
 source = FendGen.generateSource(reader)
 parser = FendGen.generateParser(source)
 # parser = TokenDisplayerParser.new(Scanner.new(source))
-
 class ParserListener
 
   TkMessageFormat =  "Type: %s, line: %i, position: %i, text: %s, value: %s"
@@ -46,11 +45,8 @@ end
 parser.addMsgListener(ParserListener.new)
 parser.parse
 iCode    = parser.getICode
-#voidBuff = parser.getVoidBuff
 iCodePrinter    = ICodePrinter.new
-#voidBuffPrinter = VoidBuffPrinter.new
 iCodePrinter.printICode(iCode)
-#voidBuffPrinter.printBuff(voidBuff)
 source.close
 
 

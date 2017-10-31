@@ -2,7 +2,7 @@
 /* Testing variables and calls */
 
 @i := "2"
-@i.toString() 
-@i[2,3,3] := "banana"
+@i.toString()
+@i[2,3,3] := "banana" 
 A:B:C.ciao()
 ciao()

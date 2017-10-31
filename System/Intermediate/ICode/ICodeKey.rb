@@ -9,8 +9,8 @@ class ICodeKey < Enum
   enum_attr :LINE
   enum_attr :ID
   enum_attr :ID_PATH
+  enum_attr :PATH
   enum_attr :VALUE
-  enum_attr :OWNER_NAME
   
 end
 

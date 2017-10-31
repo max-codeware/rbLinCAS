@@ -34,6 +34,17 @@ class SymbolTable < Hash
     @level       = -1
   end
   
+  # * **returns**: @currentPath
+  def getCurrentPath
+    @currentPath
+  end
+  
+  # Sets a path to execute seeking operations
+  def setPath(path)
+    @currentPath = path.clone
+    @root        = @currentPath.getRoot unless path.empty?
+  end
+  
   # Enters a name in the current symbol table the path points at
   #
   # * **argument**: name to enter

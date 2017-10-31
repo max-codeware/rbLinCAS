@@ -14,23 +14,33 @@ class ForParser < TDparser
   
   def parse(token)
   
+    # Skipping `for` token
     token  = nextTk
     tkType = token.getType
+    # Parsing counter identifier; if it is not found, a dummy one is created.
     case tkType
       when TkType.L_IDENT
-        id = @@symbolTabStack.enterLocal(token.getText)
+        id = @@symTab.enterLocal(token.getText)
         id.addLineNum(token.getLine)
         var = ICodeGen.generateNode(ICodeNType.LVARIABLE)
         var.setAttr(ICKey.ID,id)
+        @@symTab.exitLocal
       when TkType.G_IDENT
-        
+        id = @@symTab.enterGlobal(token.getText)
+        id.addLineNum(token.getLine)
+        var = ICodeGen.generateNode(ICodeNType.GVARIABLE)
+        var.setAttr(ICKey.ID,id)
+        @@symTab.exitLocal
       else
         @errHandler.flag(token,ErrCode.MISSING_ID,self)
-        id = @@symbolTabStack.enterLocal("dummyVar")
+        id = @@symTab.enterLocal("dummyVar")
         id.addLineNum(token.getLine)
         var = ICodeGen.generateNode(ICodeNType.LVARIABLE)
         var.setAttr(ICKey.ID,id)
+        @symTab.exitLocal
     end
+    
+    # Creating basic nodes to represent a `for` statement
     forNode    = ICodeGen.generateNode(ICodeNType.COMPOUND)
     loopNode   = ICodeGen.generateNode(ICodeNType.WHILE)
     assignNode = ICodeGen.generateNode(ICodeNType.ASSIGN)
@@ -41,6 +51,7 @@ class ForParser < TDparser
     
     nextTk
     token = sync(FOR_SYNC_SET)
+    # Looking for a `COLON` token. if not found a sintax error wil be sent
     if token.getType == TkType.COLON then
       token = nextTk
     else
@@ -54,6 +65,7 @@ class ForParser < TDparser
     
     token  = sync(FOR_SYNC_SET)
     tkType = token.getType
+    # Parsing loop direction; if missing `to` is default
     case tkType
       when TkType.DOWNTO
         test = ICodeGen.generateNode(ICodeNType.GE)
@@ -75,11 +87,13 @@ class ForParser < TDparser
     test.addBranch(final)
     loopNode.addBranch(test)
     
+    # Parsing `for` body
     skipEol
     token     = currentTk
     blcParser = BlockParser.new(self)
     block     = blcParser.parse(token)
     
+    # Adding counter increase instruction to `for` body
     finalAssignNode =  ICodeGen.generateNode(ICodeNType.ASSIGN)
     finalAssignNode.addBranch(var)
     finalAssignNode.addBranch(sumN)
@@ -87,13 +101,9 @@ class ForParser < TDparser
     loopNode.addBranch(block)
     forNode.addBranch(loopNode)
     
+    # Checking end of line
     token  = currentTk
-    tkType = token.getType
-    if tkType == TkType.EOL or tkType == TkType.SEMICOLON then
-      nextTk
-    else
-      @errHandler.flag(token,ErrCode.MISSING_EOL,self)
-    end
+    checkEol(token)
     
     return forNode
     

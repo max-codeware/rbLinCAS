@@ -37,6 +37,7 @@ class ErrorCode < Enum
   enum_attr :MISSING_CS_ES,    "Missing keyword 'case' or 'else'"
   enum_attr :MISSING_DOT,      "Missing '.'"
   enum_attr :MISSING_ARG,      "Missing argument"
+  enum_attr :MISSING_NAME,     "Missing name"
   enum_attr :MAYBE_MISS_INDEX, "Maybe missing index"
   enum_attr :ALREADY_FORWARDED,"Void already forwarded"
   enum_attr :ID_DEFINED,       "Identifier already defined. It's definition won't change"

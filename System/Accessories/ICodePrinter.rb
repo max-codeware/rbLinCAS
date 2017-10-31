@@ -77,7 +77,7 @@ private
     append(other)
     
     if symTabEntry
-      level = value.getSymbolTab.getNLevel
+      level = value.getLevel
       printAttr("LEVEL",level)
     end
   end
