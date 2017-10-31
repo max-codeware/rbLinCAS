@@ -1,5 +1,10 @@
 #! /usr/bin/env ruby
 
+
+##
+#
+# Author:: Massimiliano Dal Mas (mailto:max.codeware@gmail.com)
+# License:: Distributed under MIT license
 class ClassParser < TDparser
 
   CLASS_BEG_SET = [TkType.CLASS,TkType.L_IDENT,TkType.INHERIT,
@@ -67,5 +72,67 @@ private
     id.setDef(Def.CLASS)
     id
   end
+  
+  def reachNameSpace(token)
+    name = token.getName
+    id   = @@symTab.lookUp(name)
+    
+    if ! id then
+      @errHandler.flag(token,ErrCode.UNDEF_IDENT,self)
+      return name
+    end
+    
+    token  = nextTk
+    oldTk  = token
+    tkType = token.getType
+    
+    while tkType == TkType.COLON do
+    
+      token  = nextTk
+      tkType = token.getType
+      
+      if tkType == TkType.L_IDENT
+        name = token.getText
+        subId = id.lookUpLocal(name)
+        
+        if ! subId then
+          @errHandler.flag(token,ErrCode.UNDEF_IDENT_FOR % id.getPath.to_s,self)
+          return id.getPath
+        else
+          id = subId
+        end
+        
+      else
+      
+        @errHandler.flag(token,ErrCode.MISSING_NAME,self)
+        return id.getPath
+        
+      end
+      
+      token  = nextTk
+      oldTk  = token
+      tkType = token.getType
+      
+    end
+    
+    idDef = id.getDef
+    
+    if idDef != Def.CLASS then
+      @errHandler.flag(oldTk,ErrCode.IS_NOT_A_CLASS % id.getName,self)
+    end
+    
+    id.getPath
+  end
 
 end
+
+
+
+
+
+
+
+
+
+
+

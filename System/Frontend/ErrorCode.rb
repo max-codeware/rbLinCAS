@@ -16,6 +16,7 @@ class ErrorCode < Enum
   enum_attr :INVALID_REAL,     "Invalid real format"
   enum_attr :INVALID_CALL_NAME,"invalid method name"
   enum_attr :ILLEGAL_EXPR,     "Illegal expression"
+  enum_attr :UNDEF_IDENT_FOR,  "Undefined identifier for %s"
   enum_attr :UNDEF_IDENT,      "Undefined identifier"
   enum_attr :UNDEF_VOID,       "Undefined void"
   enum_attr :MISSING_R_PAR,    "Missing ')'"
@@ -44,6 +45,7 @@ class ErrorCode < Enum
   enum_attr :VOID_DEFINED,     "Void already defined"
   enum_attr :CANNOT_CHANGE_INT,"Void already defined as internal. It won't be redefined"
   enum_attr :IRREGULAR_MATRIX, "Irregular matrix rows"
+  enum_attr :ID_IS_NOT_A_CLASS,"'%s' is not a class"
 end
 
 ErrCode = ErrorCode.new
