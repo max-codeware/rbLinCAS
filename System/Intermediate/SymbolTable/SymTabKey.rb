@@ -9,6 +9,7 @@ class SymbolTabKey < Enum
   enum_attr :VOID_STATE
   enum_attr :ICODE
   enum_attr :PARENT
+  enum_attr :VOID_ARGS
 end
 
 SymTabKey = SymbolTabKey.new

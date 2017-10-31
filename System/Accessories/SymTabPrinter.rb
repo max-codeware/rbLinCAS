@@ -9,7 +9,7 @@ class SymTabPrinter
   ATTR_FORMAT = ["%sDefinition: %s",
                  "%sNesting level: %i",
                  "%sLineNumbers: %s",
-                 "%sAttributes: %s"]
+                 "%sAttributes:\n%s"]
 
   def initialize
     @indent   = ""
@@ -28,14 +28,15 @@ class SymTabPrinter
     indentBackUp = @indent
     @indent += @toIndent
     path  = entry.getPath
+    puts "-#{path}"
     defs  = [entry.getDef,
              entry.getLevel,
              entry.getLineNums.join(", "),
              attrsToString(entry.getAttrs)]
-    puts path
     for i in 0...defs.size do
       puts ATTR_FORMAT[i] % [@indent, defs[i]]
     end
+    puts
     @indent = indentBackUp
     entry.each_key do |key|
       printEntry(entry[key])
@@ -46,10 +47,32 @@ private
   
   def attrsToString(attrs)
     s_attr = ""
+    indentBackUp = @indent
+    @indent += @toIndent
+    icodePrinter = ICodePrinter.new(@indent.size)
+    icodePrinter.disableHeader
     attrs.each_key do |key|
-      s_attr << "#{key} -> #{atts[key]}\n"
+      s_attr << "#{@indent}#{key} -> #{attrs[key]}\n" unless [:ICODE,:VOID_ARGS].include? key
+      if key == :ICODE then
+        puts "#{indentBackUp}ICODE:"
+        icodePrinter.printICode(attrs[key])
+      elsif key == :VOID_ARGS
+        s_attr << "#{@indent}#{key}\n#{voidArgsTo_s(attrs[key])}"
+      end
     end
+    @indent = indentBackUp
     s_attr
+  end
+  
+  def voidArgsTo_s(void_args)
+    indentBackUp = @indent
+    @indent += @toIndent
+    va = ""
+    void_args.each do |arg|
+      va << "#{@indent}#{arg.getAttr(:ID_PATH).to_s}\n"
+    end
+    @indent = indentBackUp
+    va
   end
 
 end

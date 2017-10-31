@@ -31,28 +31,29 @@ class VoidParser < TDparser
     enableReturn
     
     voidName = parseName(token)
-    if @@voidBuff.definedLocally?(voidName) then
-      tag = @@voidBuff.getTagOf(voidName)
-      case tag
-        when VTag.DECLARED
-          @@symbolTabStack.push
-        when VTag.AHEAD
-          @@symbolTabStack.push(@@voidBuff.getSymTabOf(voidName))
-        when VTag.INTERNAL
-          @errHandler.flag(token,ErrCode.CANNOT_CHANGE_INT,self)
-          voidName = createDummyName
-          initializeVoid(voidName)
-      end
+    if !voidName.getDef then
+      voidName.setDef(Def.VOID)
     else
-      initializeVoid(voidName)
+      voidState = voidName.getAttr(SymTabKey.VOID_STATE)
+      if voidState then
+        case voidState
+          when VTag.DECLARED
+            @errHandler.flag(token,ErrCode.VOID_DEFINED,self)
+            voidName = makeDummy
+          when VTag.AHEAD
+            symTabPath = @@symTab.getCurrentPath
+            @@symTab.setPath(voidName.getPath)
+          when VTag.INTERNAL
+            @errHandler.flag(token,ErrCode.CANNOT_CHANGE_INT,self)
+            voidName = makeDummy
+        end
+      end
     end
-    
-    pushState ParsingSt.VOID
-    
+
     nextTk
     token  = sync(VOID_SYNC_SET)
     tkType = token.getType
-    if tag == VTag.AHEAD then     
+    if voidState == VTag.AHEAD then     
       if tkType != TkType.L_PAR
         @errHandler.flag(token,ErrCode.MISSING_L_PAR,self) 
       else
@@ -67,7 +68,8 @@ class VoidParser < TDparser
         token = sync(VOID_SYNC_SET)
       end
     else
-      parseParams(token,voidName)
+      params = parseParams(token)
+      voidName.setAttr(SymTabKey.VOID_ARGS,params)
       token = sync(VOID_SYNC_SET)
     end
     
@@ -75,50 +77,50 @@ class VoidParser < TDparser
       blcParser = BlockParser.new(self)
       iCode     = ICodeGen.generateICode
       iCode.setRoot(blcParser.parse(token))
-      @@voidBuff.setICodeAt(voidName,iCode)
-      @@voidBuff.setTagAt(voidName,VTag.DECLARED)
+      voidName.setAttr(SymTabKey.ICODE,iCode)
+      voidName.setAttr(SymTabKey.VOID_STATE,VTag.DECLARED)
     else
-      @@errHandler.flag(token,ErrCode.ALREADY_FORWARDED,self) if tag == VTag.AHEAD
+      @errHandler.flag(token,ErrCode.ALREADY_FORWARDED,self) if voidState == VTag.AHEAD
+      voidName.setAttr(SymTabKey.VOID_STATE,VTag.AHEAD)
       nextTk
     end
     
-    @@voidBuff.setSymTabAt(voidName,@@symbolTabStack.pop)
     disableReturn
     token = currentTk
     checkEol(token)
-    popState
+    @@symTab.exitLocal unless symTabPath
+    @@symTab.setPath(symTabPath) if symTabPath
     
-    return voidName
+    return voidName.getPath
   end
   
  private
  
    def parseName(token)
      tkType = token.getType
-     id = @@symbolTabStack.lookUpLocal(token.getText)
-     if id then
-       @errHandler.flag(token,ErrCode.ID_DEFINED,self)
-       return createDummyName
+     id = @@symTab.lookUpVoid(token.getText)
+     if ! id then
+       case tkType
+         when TkType.L_PAR
+           @errHandler.flag(token,ErrCode.MISSING_ID,self)
+           name = createDummyName
+         when TkType.G_IDENT
+           @errHandler.flag(token,ErrCode.MISSING_ID,self)
+           name = token.getText
+         when TkType.L_IDENT
+           name = token.getText
+         else
+           @errHandler.flag(token,ErrCode.MISSING_ID,self)
+           name = createDummyName
+       end
+       id = @@symTab.enterLocal(name)
      end
-     case tkType
-       when TkType.L_PAR
-         @errHandler.flag(token,ErrCode.MISSING_ID,self)
-         name = createDummyName
-       when TkType.G_IDENT
-         @errHandler.flag(token,ErrCode.MISSING_ID,self)
-         name = token.getText
-       when TkType.L_IDENT
-         name = token.getText
-       else
-         @errHandler.flag(token,ErrCode.MISSING_ID,self)
-         name = createDummyName
-     end
-     return name
+     return id
    end
    
    ARG_SYNC_SET = VOID_SYNC_SET + [TkType.L_IDENT] - [TkType.AHEAD,TkType.L_BRACE]
    
-   def parseParams(token,voidName)
+   def parseParams(token)
      token = sync(ARG_SYNC_SET)
      tkType = token.getType
      if tkType != TkType.L_PAR
@@ -138,7 +140,7 @@ class VoidParser < TDparser
        list << id if id
        token  = currentTk
        tkType = token.getType
-       if tkType = TkType.COMMA
+       if tkType == TkType.COMMA
          nextTk
          skipEol
          token = sync(ARG_SYNC_SET)
@@ -153,18 +155,20 @@ class VoidParser < TDparser
      else
        nextTk
      end
-     @@voidBuff.setArgsAt(voidName,list)
+     list
    end
    
    
    def createDummyName
      @@dummy += 1
-     return "dummyVoid_" + @@dummy.to_s
+     return "dummyVoid_#{@@dummy}"
    end
    
-   def initializeVoid(voidName)
-     @@voidBuff.addVoidName(voidName)
-     @@symbolTabStack.push
+   def makeDummy
+     voidName = createDummyName
+     voidName = @@symTab.enterLocal(voidName)
+     voidName.setDef(Def.VOID)
+     voidName
    end
 
 end

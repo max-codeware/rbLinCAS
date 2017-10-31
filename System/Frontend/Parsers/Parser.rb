@@ -33,7 +33,7 @@ class Parser < MessageGenerator
   end
   
   def getSymTab
-    @symTab
+    @@symTab
   end
   
   def getSymTabStack

@@ -15,6 +15,12 @@ class IDparser < ExpressionParser
     return parseID(token)
   end
   
+  def parseIdOnly(token)
+    id = parseIDType(token)
+    nextTk
+    id
+  end
+  
   def ignoreUndef
     @ignoreUndef = true
   end
@@ -222,7 +228,7 @@ class IDparser < ExpressionParser
         end
         df.addLineNum(token.getLine)
         root = ICodeGen.generateNode(ICodeNType.LVARIABLE)
-        root.setAttr(ICKey.ID_PATH,df)       
+        root.setAttr(ICKey.ID_PATH,df.getPath)       
       else 
         root = ICodeGen.generateNode(ICodeNType.SVARIABLE)
         root.setAttr(ICKey.ID,name)    
@@ -238,7 +244,6 @@ class IDparser < ExpressionParser
         id = @@symTab.enterGlobal(name)
         id.setDef(Def.G_IDENT)
         id.setAttr(SymTabKey.TYPE,Tp.UNDEF)
-        @@symTab.exitLocal
       end
       id.addLineNum(token.getLine)
       root = ICodeGen.generateNode(ICodeNType.GVARIABLE)

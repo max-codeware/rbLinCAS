@@ -2,7 +2,7 @@
 
 require_relative "System/System.rb"
 
-filepath = File.expand_path("Tests/Test9.txt",File.dirname(__FILE__))
+filepath = File.expand_path("Tests/Test10.txt",File.dirname(__FILE__))
 reader = FendGen.generateReader(filepath)
 source = FendGen.generateSource(reader)
 parser = FendGen.generateParser(source)
@@ -46,7 +46,9 @@ parser.addMsgListener(ParserListener.new)
 parser.parse
 iCode    = parser.getICode
 iCodePrinter    = ICodePrinter.new
+symTabPrinter   = SymTabPrinter.new
 iCodePrinter.printICode(iCode)
+symTabPrinter.printTable(parser.getSymTab)
 source.close
 
 

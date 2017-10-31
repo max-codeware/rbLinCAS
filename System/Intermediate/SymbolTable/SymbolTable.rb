@@ -152,11 +152,16 @@ class SymbolTable < Hash
       while path != globalPath
         path.exitName
         cEntry = get(path)
-        entry = checkEntry(cEntry.lookUpLocal(name))
+        entry = checkEntry(cEntry.lookUpLocal(name)) if entry
+        return entry if entry
+      end
+      if path.empty?
+        entry = self[name] if self.keys.include? name
+        entry = checkEntry(entry)
         return entry if entry
       end
     else
-      entry = lookUpLocal(name)
+      entry = self[name] if self.keys.include? name
       entry = checkEntry(entry)
       return entry if entry
     end
@@ -201,11 +206,12 @@ private
     path       = @currentPath.clone
     entry      = get(path)
     definition = entry.getDef unless path.empty?
+    path.exitName
     while !(path.empty?) and !(terminate.include? definition)
       path.exitName
       entry      = get(path)
-      definition = entry.getDef
-    end   
+      definition = entry.getDef if entry
+    end  
     path
   end
   

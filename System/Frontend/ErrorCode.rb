@@ -41,6 +41,7 @@ class ErrorCode < Enum
   enum_attr :MAYBE_MISS_INDEX, "Maybe missing index"
   enum_attr :ALREADY_FORWARDED,"Void already forwarded"
   enum_attr :ID_DEFINED,       "Identifier already defined. It's definition won't change"
+  enum_attr :VOID_DEFINED,     "Void already defined"
   enum_attr :CANNOT_CHANGE_INT,"Void already defined as internal. It won't be redefined"
   enum_attr :IRREGULAR_MATRIX, "Irregular matrix rows"
 end

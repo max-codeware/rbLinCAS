@@ -30,7 +30,6 @@ class TokenTypeEnum < Enum
   enum_attr :ELSIF,     "elsif"
   enum_attr :THEN,      "then"
   enum_attr :ELSE,      "else"
-  # enum_attr :PROC,    "proc"
   enum_attr :VOID,      "void"
   enum_attr :AHEAD,     "ahead"
   enum_attr :SELECT,    "select"
@@ -40,7 +39,7 @@ class TokenTypeEnum < Enum
   enum_attr :UNTIL,     "until"
   enum_attr :DO,        "do"
   enum_attr :FOR,       "for"
-  enum_attr :FOREACH,   "foreach"
+  # enum_attr :FOREACH,   "foreach"
   enum_attr :IN,        "in"
   enum_attr :FROM,      "from"
   enum_attr :TO,        "to"
@@ -50,6 +49,7 @@ class TokenTypeEnum < Enum
   enum_attr :PUBLIC,    "public"
   enum_attr :PROTECTED, "protected"
   enum_attr :PRIVATE,   "private"
+  enum_attr :INHERIT,   "inherit"
   
   # Internal values
   enum_attr :TRUE,  "true"

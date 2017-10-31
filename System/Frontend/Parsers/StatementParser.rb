@@ -20,7 +20,8 @@ class StatementParser < TDparser
       when TkType.VOID
         voidParser = VoidParser.new(self)
         voidName   = voidParser.parse(token)
-        @@voidBuff.setTypeAt(voidName,VType.PUBLIC)
+        root       = ICodeGen.generateNode(ICodeNType.VOID)
+        root.setAttr(ICKey.ID_PATH,voidName)
       when TkType.L_IDENT, TkType.G_IDENT, TkType.COLON_EQ
         assignParser = AssignParser.new(self)
         root         = assignParser.parse(token)

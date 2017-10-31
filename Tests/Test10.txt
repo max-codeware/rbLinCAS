@@ -1,10 +1,19 @@
 
 /* testing voids */
 
-void myTry(a,b) {
+void myTry(a,b) ahead
+
+void myTry() {
   if a then {
    b := 3
   }
+}
+
+/* Checking sintax error handling: cannot define
+   this void again */
+   
+void myTry() {
+   b := 3
 }
 
 a := true
