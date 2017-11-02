@@ -41,29 +41,45 @@ class BodyParser < TDparser
     end
     
     while tkType != TkType.R_BRACE and not token.is_a? EofToken
-    
+      prevTk = token
       case tkType
         when TkType.PRIVATE
           @errHandler.flag(token,ErrCode.PRIVATE_IN_MODULE,self) unless @classMode
           token = nextTk
           void = parseVoid(token)
-          void.setAttr(SymTabKey.VOID_TYPE,VType.PRIVATE)
+          voidType = void.getAttr(SymTabKey.VOID_TYPE)
+          if !voidType
+            void.setAttr(SymTabKey.VOID_TYPE,VType.PRIVATE)
+          elsif voidType != VType.PRIVATE
+            @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
+          end
           body.addBranch(makeVoidNode(void))
         when TkType.PROTECTED
           @errHandler.flag(token,ErrCode.PROTECTED_IN_MODULE,self) unless @classMode
           token = nextTk
           void = parseVoid(token)
-          void.setAttr(SymTabKey.VOID_TYPE,VType.PROTECTED)
+          voidType = void.getAttr(SymTabKey.VOID_TYPE)
+          if !voidType
+            void.setAttr(SymTabKey.VOID_TYPE,VType.PROTECTED)
+          elsif voidType != VType.PROTECTED
+            @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
+          end
           body.addBranch(makeVoidNode(void))
         when TkType.PUBLIC
           token = nextTk
           void = parseVoid(token)
-          void.setAttr(SymTabKey.VOID_TYPE,VType.PUBLIC)
+          voidType = void.getAttr(SymTabKey.VOID_TYPE)
+          if !voidType
+            void.setAttr(SymTabKey.VOID_TYPE,VType.PUBLIC)
+          elsif voidType != VType.PUBLIC
+            @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
+          end
           body.addBranch(makeVoidNode(void))
         else
           programParser = ProgramParser.new(self)
           body.addBranch(programParser.parse(token))
       end
+      skipEol
       token  = currentTk
       tkType = token.getType
     end
@@ -88,8 +104,9 @@ private
   end
   
   def makeVoidNode(void)
+    voidTag = void.getAttr(SymTabKey.VOID_STATE)
     voidNode   = ICodeGen.generateNode(ICodeNType.VOID)
-    voidNode.addBranch(void.getAttr(SymTabKey.ICODE).getRoot)
+    voidNode.addBranch(void.getAttr(SymTabKey.ICODE).getRoot) unless voidTag == VTag.AHEAD
     voidNode.setAttr(ICKey.ID_PATH,void.getPath)
     voidNode
   end

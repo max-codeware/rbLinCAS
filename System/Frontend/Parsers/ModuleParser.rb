@@ -23,7 +23,7 @@ class ModuleParser < TDparser
       nameTk = token
       name   = token.getText
       nextTk
-      token = sync(CLASS_BEG_SET)
+      token = sync(MODULE_SYNC_SET)
     end
     
     id = @@symTab.lookUp(name)
@@ -32,7 +32,7 @@ class ModuleParser < TDparser
         @errHandler.flag(nameTk,ErrCode.LOCKED_MODULE,self) if id.getAttr(SymTabKey.ACCESS) == Access.LOCKED
         symTabPath = @@symTab.getPath
         @@symTab.setPath(id.getPath)
-        oldIcode = id.getAttr(SymTabKey.ICODE)
+        oldICode = id.getAttr(SymTabKey.ICODE)
       else
         id = setModule(name)
       end

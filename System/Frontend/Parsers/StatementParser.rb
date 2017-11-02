@@ -20,9 +20,11 @@ class StatementParser < TDparser
       when TkType.VOID
         voidParser = VoidParser.new(self)
         voidName   = voidParser.parse(token)
+        voidType   = voidName.getAttr(SymTabKey.VOID_TYPE)
         root       = ICodeGen.generateNode(ICodeNType.VOID)
-        voidName.setAttr(SymTabKey.VOID_TYPE,VType.PUBLIC)
-        root.addBranch(voidName.getAttr(SymTabKey.ICODE).getRoot)
+        voidName.setAttr(SymTabKey.VOID_TYPE,VType.PUBLIC) unless voidType
+        iCode      = voidName.getAttr(SymTabKey.ICODE)
+        root.addBranch(iCode.getRoot) if iCode
         root.setAttr(ICKey.ID_PATH,voidName.getPath)
         
       when TkType.L_IDENT, TkType.G_IDENT, TkType.COLON_EQ

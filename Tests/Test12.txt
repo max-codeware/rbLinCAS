@@ -1,0 +1,16 @@
+
+/* Testing 'module' statement */
+
+module MyModule {
+  
+  void moduleVoid(a,b) ahead
+
+  void moduleVoid() {
+   k := 3
+  }
+  
+  class moduleClass {
+  
+  }
+
+}

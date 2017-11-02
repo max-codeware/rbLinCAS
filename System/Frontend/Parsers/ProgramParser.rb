@@ -30,7 +30,7 @@ class ProgramParser < TDparser
         
       when TkType.MODULE
         mod  = parseModule(token)
-        node = makeClassNode(mod)
+        node = makeModuleNode(mod)
         
       when TkType.LOCKED
         token  = nextTk
@@ -65,7 +65,9 @@ private
   end
 
   def parseModule(token)
-  
+    moduleParser = ModuleParser.new(self)
+    mod          = moduleParser.parse(token)
+    mod
   end
   
   def makeClassNode(klass)
@@ -78,7 +80,7 @@ private
   def makeModuleNode(mNode)
     node  = ICodeGen.generateNode(ICodeNType.MODULE)
     node.addBranch(mNode.getAttr(SymTabKey.ICODE).getRoot)
-    node.setAttr(ICKey.ID_PATH,klass.getPath)
+    node.setAttr(ICKey.ID_PATH,mNode.getPath)
     node
   end
   

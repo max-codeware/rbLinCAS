@@ -63,7 +63,7 @@ module System
        Frontend/Parsers/ForParser.rb Frontend/Parsers/SelectParser.rb
        Frontend/Parsers/VoidParser.rb Frontend/Parsers/TokenDisplayer.rb
        Frontend/FrontendGen.rb Frontend/Parsers/ClassParser.rb
-        Frontend/Parsers/BodyParser.rb|.each do |file|
+       Frontend/Parsers/BodyParser.rb Frontend/Parsers/ModuleParser.rb|.each do |file|
        
          require_relative File.expand_path(file,File.dirname(__FILE__))
       

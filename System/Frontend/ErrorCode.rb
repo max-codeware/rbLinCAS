@@ -53,6 +53,7 @@ class ErrorCode < Enum
   enum_attr :WRONG_LOCKED_ARG, "Wrong argument for keyword 'locked'"
   enum_attr :LOCKED_CLASS,     "Attempting to overload a locked class"
   enum_attr :LOCKED_MODULE,    "Attempting to overload a locked module"
+  enum_attr :REDEFINING_ACCESS,"Redefining void accessibility"
 end
 
 ErrCode = ErrorCode.new
