@@ -132,8 +132,35 @@ class SymbolTable < Hash
         return entry if entry
         path.exitName
       end
+      entry = self[name] if self.keys.include? name
+      return entry if entry
     end
     nil
+  end
+  
+  # Imports global variables from a class scope onto another one
+  #
+  # * **argument**: source path
+  def importGlobalFrom(path)
+    raise RuntimeError, "Symbol table is receiving an empty path" if path.empty?
+    parentEntry = get(path)
+    raise RuntimeError, "Unexisting symbol table path #{path.to_s}" unless parentEntry
+    global = parentEntry.getGlobal
+    global.each do |var|
+      importToLocal(var)
+    end
+  end
+  
+  # Copies an entry from a class scope to another
+  #
+  # * **argument**: SymbolTabEntry
+  def importToLocal(entry)
+    raise RuntimeError, "Cannot import names in global namespace" if @currentPath.empty?
+    if @currentPath.hasChild? then
+      self[@root].sendImportToLocal(@currentPath.getChild,entry)
+    else
+      self[@root].importToLocal(entry)
+    end
   end
   
   # This is a special lookUp to find a void name; it goes backward
@@ -206,7 +233,6 @@ private
     path       = @currentPath.clone
     entry      = get(path)
     definition = entry.getDef unless path.empty?
-    path.exitName
     while !(path.empty?) and !(terminate.include? definition)
       path.exitName
       entry      = get(path)
@@ -221,7 +247,7 @@ private
   # * **returns**: SymbolTabEntry if the entry definition is VOID; +nil+ else
   def checkEntry(entry)
     if entry then
-      if entry.getDef == :VOID
+      if entry.getDef == Def.VOID
         return entry
       end
     end

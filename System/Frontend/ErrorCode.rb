@@ -39,6 +39,7 @@ class ErrorCode < Enum
   enum_attr :MISSING_DOT,      "Missing '.'"
   enum_attr :MISSING_ARG,      "Missing argument"
   enum_attr :MISSING_NAME,     "Missing name"
+  enum_attr :MISSING_VOID_KW,  "Missing keyword 'void'"
   enum_attr :MAYBE_MISS_INDEX, "Maybe missing index"
   enum_attr :ALREADY_FORWARDED,"Void already forwarded"
   enum_attr :ID_DEFINED,       "Identifier already defined. It's definition won't change"
@@ -46,6 +47,12 @@ class ErrorCode < Enum
   enum_attr :CANNOT_CHANGE_INT,"Void already defined as internal. It won't be redefined"
   enum_attr :IRREGULAR_MATRIX, "Irregular matrix rows"
   enum_attr :ID_IS_NOT_A_CLASS,"'%s' is not a class"
+  enum_attr :HAS_PARENT,       "Class has already a parent"
+  enum_attr :PRIVATE_IN_MODULE,"Cannot declare private voids in modules"
+  enum_attr :PROTECTED_IN_MODULE,"Cannot declare protected voids in modules"
+  enum_attr :WRONG_LOCKED_ARG, "Wrong argument for keyword 'locked'"
+  enum_attr :LOCKED_CLASS,     "Attempting to overload a locked class"
+  enum_attr :LOCKED_MODULE,    "Attempting to overload a locked module"
 end
 
 ErrCode = ErrorCode.new

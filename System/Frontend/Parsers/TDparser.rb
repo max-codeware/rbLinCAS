@@ -19,14 +19,13 @@ class TDparser < Parser
       token  = currentTk
       tkType = token.getType
       if not tkType == TkType.ERROR
-      
         case tkType
-          
           when TkType.EOL
             nextTk  
+            
           else
-            stmtParser = StatementParser.new(self)
-            stmt       = stmtParser.parse(token)
+            programParser = ProgramParser.new(self)
+            stmt         = programParser.parse(token)
             root.addBranch(stmt) if stmt
             
         end

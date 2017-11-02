@@ -19,7 +19,7 @@ VTag = VoidTag.new
 # License:: Distributed under MIT license
 class VoidParser < TDparser
 
-  VOID_SYNC_SET = [TkType.L_PAR,TkType.R_PAR,TkType.AHEAD,
+  VOID_SYNC_SET = [TkType.VOID,TkType.L_PAR,TkType.R_PAR,TkType.AHEAD,
                    TkType.L_BRACE,TkType.EOL,TkType.SEMICOLON]
 
   def initialize(scanner)
@@ -27,7 +27,12 @@ class VoidParser < TDparser
   end
   
   def parse(token)
-    token = nextTk
+    token = sync(VOID_SYNC_SET)
+    if token.getType != TkType.VOID then
+      @errHandler.flag(token,ErrCode.MISSING_VOID_KW,self)
+    else
+      token = nextTk
+    end
     enableReturn
     
     voidName = parseName(token)
@@ -91,7 +96,7 @@ class VoidParser < TDparser
     @@symTab.exitLocal unless symTabPath
     @@symTab.setPath(symTabPath) if symTabPath
     
-    return voidName.getPath
+    return voidName
   end
   
  private

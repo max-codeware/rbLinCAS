@@ -7,7 +7,7 @@
 # License:: Distributed under MIT license
 class ClassParser < TDparser
 
-  CLASS_BEG_SET = [TkType.CLASS,TkType.L_IDENT,TkType.INHERIT,
+  CLASS_BEG_SET = [TkType.CLASS,TkType.L_IDENT,TkType.INHERITS,
                    TkType.L_BRACE,TkType.EOL]
   
   def initialize(scanner)
@@ -22,40 +22,52 @@ class ClassParser < TDparser
       @errHandler.flag(token,ErrCode.MISSING_ID,self)
       name = createDummyName
     else
-      name = token.getText
+      nameTk = token
+      name   = token.getText
       nextTk
       token = sync(CLASS_BEG_SET)
     end
     id = @@symTab.lookUp(name)
     if id then
       if id.getDef == Def.CLASS
+        @errHandler.flag(nameTk,ErrCode.LOCKED_CLASS,self) if id.getAttr(SymTabKey.ACCESS) == Access.LOCKED
         symTabPath = @@symTab.getCurrentPath
         @@symTab.setPath(id.getPath)
+        oldICode = id.getAttr(SymTabKey.ICODE)
       else
-        id = setClass
+        id = setClass(name)
       end
     else
-      id = setClass
+      id = setClass(name)
     end
     tkType = token.getType
-    if tkType == TkType.INHERIT then
+    if tkType == TkType.INHERITS then
       nextTk
       token  = sync(CLASS_BEG_SET)
       tkType = token.getType
       if tkType != TkType.L_IDENT
-        @errHandler(token,ErrCode.MISSING_ID,self)
+        @errHandler.flag(token,ErrCode.MISSING_ID,self)
       else
         parent = reachNameSpace(token)
-        id.setAttr(SymTabKey.PARENT,parent)
+        if id.getAttr(SymTabKey.PARENT) then
+          @errHandler.flag(token,ErrCode.HAS_PARENT,self)
+        else
+          id.setAttr(SymTabKey.PARENT,parent)
+          @@symTab.importGlobalFrom(parent)
+        end
       end
     end
     bodyParser = BodyParser.new(self)
     bodyParser.classMode
     iCode      = ICodeGen.generateICode
-    iCode.setRoot(bodyParser.parse(token))
+    body       = bodyParser.parse(token)
+    body.addBranch(oldICode.getRoot) if oldICode
+    iCode.setRoot(body)
     id.setAttr(SymTabKey.ICODE,iCode)
     @@symTab.exitLocal unless symTabPath
     @@symTab.setPath(symTabPath) if symTabPath
+    token  = currentTk
+    checkEol(token)
     id
   end
   
@@ -68,13 +80,13 @@ private
   end
   
   def setClass(name)
-    id = @@symTab.enterLocal
+    id = @@symTab.enterLocal(name)
     id.setDef(Def.CLASS)
     id
   end
   
   def reachNameSpace(token)
-    name = token.getName
+    name = token.getText
     id   = @@symTab.lookUp(name)
     
     if ! id then
@@ -120,7 +132,7 @@ private
     if idDef != Def.CLASS then
       @errHandler.flag(oldTk,ErrCode.IS_NOT_A_CLASS % id.getName,self)
     end
-    
+    path = id.getPath
     id.getPath
   end
 

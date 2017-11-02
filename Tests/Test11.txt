@@ -1,0 +1,25 @@
+
+/* Testing 'class' statement */
+
+
+locked class MyClass {
+
+  public void MyMethod() {
+    @main := 0
+    x := true
+  }
+  
+  protected void MyProtected() {
+    protect := "I'm protected"
+  }
+  
+}
+
+
+class MySecondClass inherits MyClass {
+
+  private void MyPrivateMethod(){
+    c := @main
+  }
+  
+}

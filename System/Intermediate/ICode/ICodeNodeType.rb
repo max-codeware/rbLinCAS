@@ -8,6 +8,8 @@ class ICodeNodeType < Enum
 
   # Program structs
   enum_attr :VOID
+  enum_attr :CLASS
+  enum_attr :MODULE
   
   # Statements
   enum_attr :COMPOUND

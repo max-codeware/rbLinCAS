@@ -21,27 +21,36 @@ class StatementParser < TDparser
         voidParser = VoidParser.new(self)
         voidName   = voidParser.parse(token)
         root       = ICodeGen.generateNode(ICodeNType.VOID)
-        root.setAttr(ICKey.ID_PATH,voidName)
+        voidName.setAttr(SymTabKey.VOID_TYPE,VType.PUBLIC)
+        root.addBranch(voidName.getAttr(SymTabKey.ICODE).getRoot)
+        root.setAttr(ICKey.ID_PATH,voidName.getPath)
+        
       when TkType.L_IDENT, TkType.G_IDENT, TkType.COLON_EQ
         assignParser = AssignParser.new(self)
         root         = assignParser.parse(token)
+        
       when TkType.NAME
         idParser = IDparser.new(self)
         root     = idParser.parse(token)
+        
       when TkType.IF
         ifParser = IfParser.new(self)
         root     = ifParser.parse(token)
+        
       when TkType.SELECT
         selectParser = SelectParser.new(self)
         root         = selectParser.parse(token)
+        
       when TkType.FOR
         forParser = ForParser.new(self)
         root      = forParser.parse(token)
+        
       when TkType.FOREACH
         # foreachParser = ForeachParser.new(self)
         # root          = foreachParser.parse(token)
       when TkType.RETURN
         root = parseReturn(token)
+        
       when TkType.DO
         token = nextTk
         if token.getType == TkType.WHILE

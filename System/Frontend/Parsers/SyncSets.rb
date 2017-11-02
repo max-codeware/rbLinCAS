@@ -2,14 +2,15 @@
 
 STMT_BEG_SET = [TkType.SELECT,
                 TkType.FOR,
-                TkType.FOREACH,
+                # TkType.FOREACH,
                 TkType.DO,
                 TkType.L_IDENT,
                 TkType.G_IDENT,
                 TkType.EOL,
                 TkType.SEMICOLON,
                 TkType.L_BRACE,
-                TkType.L_BRACKET]
+                TkType.L_BRACKET,
+                TkType.CONST]
                 
 STMT_MID_SET = [TkType.SEMICOLON,
                 TkType.EOL,

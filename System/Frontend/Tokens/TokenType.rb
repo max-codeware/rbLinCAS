@@ -39,7 +39,7 @@ class TokenTypeEnum < Enum
   enum_attr :UNTIL,     "until"
   enum_attr :DO,        "do"
   enum_attr :FOR,       "for"
-  # enum_attr :FOREACH,   "foreach"
+  enum_attr :FOREACH,   "foreach"
   enum_attr :IN,        "in"
   enum_attr :FROM,      "from"
   enum_attr :TO,        "to"
@@ -49,7 +49,9 @@ class TokenTypeEnum < Enum
   enum_attr :PUBLIC,    "public"
   enum_attr :PROTECTED, "protected"
   enum_attr :PRIVATE,   "private"
-  enum_attr :INHERIT,   "inherit"
+  enum_attr :INHERITS,   "inherits"
+  enum_attr :CONST,     "const"
+  enum_attr :LOCKED,    "locked"
   
   # Internal values
   enum_attr :TRUE,  "true"

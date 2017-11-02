@@ -139,6 +139,43 @@ class SymbolTabEntry < Hash
     end
   end
   
+  # Forwards an #importToLocal consuming the path
+  #
+  # * **argument**: path to the scope
+  # * **argument**: SymbolTabEntry
+  def sendImportToLocal(path,entry)
+    raise RuntimeError, "Symbol table is receiving an empty path" if path.empty?
+    root = path.getRoot
+    raise RuntimeError, "Unexisting symbol table path '#{path.to_s}'" unless @name == root
+    if path.hasChild? then
+      self[root].senfImportToLocal(path.getChild,entry)
+    else
+      self[root].importToLocal(entry)
+    end
+  end
+  
+  # Imports an entry onto the current scope
+  #
+  # * **argument**: SymbolTabEntry
+  def importToLocal(entry)
+    name = entry.getName
+    entry = entry.clone
+    path = @path.clone
+    path.addName(name)
+    entry.setPath(path)
+    self[name] = entry
+  end
+  
+  # * **returns**: all the global variables (used for classes)
+  def getGlobal
+    global = []
+    self.each_key do |entryName|
+      entry = self[entryName]
+      global << entry if entry.getDef == Def.G_IDENT
+    end
+    global
+  end
+  
   # Gets an entry with the specified symbol table path
   #
   # * **argument**: path to the symbol
@@ -153,6 +190,12 @@ class SymbolTabEntry < Hash
       end
     end
     nil
+  end
+  
+protected
+
+  def setPath(path)
+    @path = path.clone
   end
   
 end
