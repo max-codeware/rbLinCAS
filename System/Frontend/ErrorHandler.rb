@@ -32,5 +32,9 @@ class ErrorHandler
     parser.sendMsg(Message.new(MsgType.SINTAX_ERROR,[0,0,"",fatalMessage]))
     exit 0
   end
+  
+  def abort
+    exit 0
+  end
 
 end

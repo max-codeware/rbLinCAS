@@ -53,6 +53,8 @@ class ProgramParser < TDparser
         stmtParser = StatementParser.new(self)
         node = stmtParser.parse(token)
     end
+    token = currentTk
+    checkEol(token) unless currentTk.is_a? EofToken
     node
   end
   
@@ -83,5 +85,6 @@ private
     node.setAttr(ICKey.ID_PATH,mNode.getPath)
     node
   end
+  
   
 end

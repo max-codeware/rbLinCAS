@@ -2,7 +2,7 @@
 
 require_relative "System/System.rb"
 
-filepath = File.expand_path("Tests/Test12.txt",File.dirname(__FILE__))
+filepath = File.expand_path("Tests/Test13.txt",File.dirname(__FILE__))
 reader = FendGen.generateReader(filepath)
 source = FendGen.generateSource(reader)
 parser = FendGen.generateParser(source)
@@ -10,7 +10,7 @@ parser = FendGen.generateParser(source)
 class ParserListener
 
   TkMessageFormat =  "Type: %s, line: %i, position: %i, text: %s, value: %s"
-  SummaryMsgFormat = "\n Source lines:       %i\n Sintax errors:      %i\n Total parsing time: %f (ms)"
+  SummaryMsgFormat = "\n Source lines:       %i\n Sintax errors:      %i\n Total parsing time: %f (ms)\n\n"
   SintaxErrorMessage = "\n Sintax error: %s\n Line %i:%i in '%s'"
 
   def receiveMsg(message)
@@ -47,9 +47,12 @@ parser.parse
 iCode    = parser.getICode
 iCodePrinter    = ICodePrinter.new
 symTabPrinter   = SymTabPrinter.new
-iCodePrinter.printICode(iCode)
-symTabPrinter.printTable(parser.getSymTab)
+#iCodePrinter.printICode(iCode)
+#symTabPrinter.printTable(parser.getSymTab)
 source.close
+executor = StatementExecutor.new(VirtualMemory.new,parser.getSymTab)
+executor.execute(parser.getICode)
+
 
 
 

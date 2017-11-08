@@ -9,7 +9,8 @@ class UntilParser < TDparser
   UNT_SYNC_SET = [TkType.UNTIL,
                   TkType.L_IDENT,
                   TkType.G_IDENT,
-                  TkType.NUMBER,
+                  TkType.INT,
+                  TkType.FLOAT,
                   TkType.EOL,
                   TkType.SEMICOLON]
 

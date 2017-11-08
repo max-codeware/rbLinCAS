@@ -27,12 +27,14 @@ class BlockParser < TDparser
     
     while tkType != TkType.R_BRACE and !(token.is_a? EofToken)
       node.addBranch(stmtParser.parse(token))
+      checkEol(currentTk)
       token  = currentTk
       tkType = token.getType
     end
     
     if tkType == TkType.EOF then
       @errHandler.flag(token,ErrCode.UNEXPECTED_EOF,self)
+      @errHandler.abort
     elsif tkType != TkType.R_BRACE
       @errHandler.flag(token,ErrCode.MISSING_R_BRACE,self)
     else

@@ -69,6 +69,19 @@ module System
       
        end
   end
+  
+  module Backend
+    include System::Message
+    include System::Intermediate
+    %w|Backend/Executors/StatementExecutor.rb
+       Backend/VirtualMemory/VirtualMemory.rb 
+       Backend/VirtualMemory/MemoryRecord.rb
+        Backend/VirtualMemory/MemoryStack.rb|.each do |file|
+         
+         require_relative File.expand_path(file,File.dirname(__FILE__))
+         
+       end
+  end
 
 end
 

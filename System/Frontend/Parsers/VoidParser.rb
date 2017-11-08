@@ -92,7 +92,7 @@ class VoidParser < TDparser
     
     disableReturn
     token = currentTk
-    checkEol(token)
+#    checkEol(token)
     @@symTab.exitLocal unless symTabPath
     @@symTab.setPath(symTabPath) if symTabPath
     

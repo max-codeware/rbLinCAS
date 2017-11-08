@@ -23,11 +23,12 @@ class NumberToken < Token
       else
         takeNums
         @value = @text.to_f
+        @type = TkType.FLOAT
       end
     else
       @value = @text.to_i
     end
-    @type = TkType.NUMBER unless @type
+    @type = TkType.INT unless @type
   end
   
  private

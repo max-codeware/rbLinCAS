@@ -6,7 +6,8 @@ module MyModule {
   void moduleVoid(a,b) ahead
 
   void moduleVoid() {
-   k := 3
+    hola := "hola"
+    return hola
   }
   
   class moduleClass {

@@ -8,7 +8,8 @@ class SelectParser < TDparser
 
   SELECT_SYNC_SET = [TkType.L_IDENT,
                      TkType.G_IDENT,
-                     TkType.NUMBER,
+                     TkType.INT,
+                     TkType.FLOAT,
                      TkType.PLUS,
                      TkType.MINUS,
                      TkType.STRING]

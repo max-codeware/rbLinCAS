@@ -67,7 +67,7 @@ class ClassParser < TDparser
     @@symTab.exitLocal unless symTabPath
     @@symTab.setPath(symTabPath) if symTabPath
     token  = currentTk
-    checkEol(token)
+#    checkEol(token)
     id
   end
   
@@ -86,54 +86,8 @@ private
   end
   
   def reachNameSpace(token)
-    name = token.getText
-    id   = @@symTab.lookUp(name)
-    
-    if ! id then
-      @errHandler.flag(token,ErrCode.UNDEF_IDENT,self)
-      return name
-    end
-    
-    token  = nextTk
-    oldTk  = token
-    tkType = token.getType
-    
-    while tkType == TkType.COLON do
-    
-      token  = nextTk
-      tkType = token.getType
-      
-      if tkType == TkType.L_IDENT
-        name = token.getText
-        subId = id.lookUpLocal(name)
-        
-        if ! subId then
-          @errHandler.flag(token,ErrCode.UNDEF_IDENT_FOR % id.getPath.to_s,self)
-          return id.getPath
-        else
-          id = subId
-        end
-        
-      else
-      
-        @errHandler.flag(token,ErrCode.MISSING_NAME,self)
-        return id.getPath
-        
-      end
-      
-      token  = nextTk
-      oldTk  = token
-      tkType = token.getType
-      
-    end
-    
-    idDef = id.getDef
-    
-    if idDef != Def.CLASS then
-      @errHandler.flag(oldTk,ErrCode.IS_NOT_A_CLASS % id.getName,self)
-    end
-    path = id.getPath
-    id.getPath
+    stmtParser = StatementParser.new(self)
+    return stmtParser.reachNamespace(token)
   end
 
 end

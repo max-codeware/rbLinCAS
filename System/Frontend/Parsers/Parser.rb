@@ -16,9 +16,6 @@ class Parser < MessageGenerator
     end
     @@msgHandler = MessageHandler.new              unless defined? @@msgHandler
     @@return    = false                            unless defined? @@return
-#    @@state     = [ParsingSt.MAIN]                 unless defined? @@state
-#    @@voidBuff  = VoidTabGen.generateVoidTabBuffer unless defined? @@voidBuff
-#    @@name      = ["Main"]                         unless defined? @@name
     @@dummy     = 0                                unless defined? @@dummy
     @@symTab    = SymTabGen.generateSymbolTable    unless defined? @@symTab
     @iCode      = nil
@@ -36,14 +33,6 @@ class Parser < MessageGenerator
     @@symTab
   end
   
-  def getSymTabStack
-    @@symbolTabStack
-  end
-  
-#  def getVoidBuff
-#    @@voidBuff
-#  end
-  
   def messageHandler
     @@msgHandler
   end
@@ -57,18 +46,6 @@ class Parser < MessageGenerator
   end
   
  protected
- 
-   def pushName(name)
-     @@name.push name
-   end
-   
-   def popName
-     @@name.pop
-   end
-   
-   def topName
-     @@name.last
-   end
    
    def enableReturn
      @@return = true
@@ -81,21 +58,5 @@ class Parser < MessageGenerator
    def returnEnabled?
      @@return
    end
-=begin  
-   def pushState(state)
-     @@state.push(state)
-   end
-  
-   def popState
-     @@state.pop
-   end
-  
-   def getStateAt(level)
-     @@state[level]
-   end
-  
-   def getStateLevel
-     @@state.size
-   end
-=end
+   
 end

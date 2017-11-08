@@ -29,6 +29,7 @@ class ICodeNodeType < Enum
   enum_attr :RETURN
   enum_attr :NOTHING
   enum_attr :INDEX
+  enum_attr :NEW
   
   # Relational operators
   enum_attr :EQ # Equal
@@ -61,9 +62,9 @@ class ICodeNodeType < Enum
   enum_attr :LVARIABLE
   enum_attr :GVARIABLE
   enum_attr :SVARIABLE
-  # enum_attr :ROUTINE
-  enum_attr :CONST
-  enum_attr :NUM_CONST
+  # enum_attr :CONST
+  enum_attr :INT
+  enum_attr :FLOAT
   enum_attr :STRING_CONST
   enum_attr :BOOL_CONST
   enum_attr :MATH_FUNCT
@@ -71,8 +72,8 @@ class ICodeNodeType < Enum
   enum_attr :NINF
   
   # IO
-  enum_attr :WRITE
-  # enum_attr :READ
+  enum_attr :PRINT
+  enum_attr :READ
   
   # Other stuff
   enum_attr :SYMBOLIC
@@ -83,6 +84,7 @@ class ICodeNodeType < Enum
   enum_attr :ARGS
   enum_attr :NAMESPACE
   enum_attr :NAME
+  enum_attr :SBUFFER
 
 end
 

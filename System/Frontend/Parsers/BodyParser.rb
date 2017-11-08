@@ -54,6 +54,7 @@ class BodyParser < TDparser
             @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
           end
           body.addBranch(makeVoidNode(void))
+          checkEol(currentTk)
         when TkType.PROTECTED
           @errHandler.flag(token,ErrCode.PROTECTED_IN_MODULE,self) unless @classMode
           token = nextTk
@@ -65,6 +66,7 @@ class BodyParser < TDparser
             @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
           end
           body.addBranch(makeVoidNode(void))
+          checkEol(currentTk)
         when TkType.PUBLIC
           token = nextTk
           void = parseVoid(token)
@@ -75,6 +77,7 @@ class BodyParser < TDparser
             @errHandler.flag(prevTk,ErrCode.REDEFINING_ACCESS,self)
           end
           body.addBranch(makeVoidNode(void))
+          checkEol(currentTk)
         else
           programParser = ProgramParser.new(self)
           body.addBranch(programParser.parse(token))
@@ -88,7 +91,7 @@ class BodyParser < TDparser
       nextTk
     elsif token.is_a? EofToken
       @errHandler.flag(token,ErrCode.UNEXPECTED_EOF,self)
-      @errHandler.abortSystem
+      @errHandler.abort
     else
       @errHandler.flag(token.ErrCode.MISSING_R_BRACE,self)
     end

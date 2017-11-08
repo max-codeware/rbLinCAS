@@ -49,7 +49,7 @@ class ModuleParser < TDparser
     @@symTab.exitLocal unless symTabPath
     @@symTab.setPath(symTabPath) if symTabPath
     token  = currentTk
-    checkEol(token)
+#    checkEol(token)
     id
   end
   

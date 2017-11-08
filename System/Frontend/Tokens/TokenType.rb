@@ -49,9 +49,10 @@ class TokenTypeEnum < Enum
   enum_attr :PUBLIC,    "public"
   enum_attr :PROTECTED, "protected"
   enum_attr :PRIVATE,   "private"
-  enum_attr :INHERITS,   "inherits"
+  enum_attr :INHERITS,  "inherits"
   enum_attr :CONST,     "const"
   enum_attr :LOCKED,    "locked"
+  enum_attr :NEW,       "new"
   
   # Internal values
   enum_attr :TRUE,  "true"
@@ -62,6 +63,7 @@ class TokenTypeEnum < Enum
   enum_attr :PRINT, "print"
   enum_attr :PRINTL,"printl"
   enum_attr :RETURN,"return"
+  enum_attr :READS, "reads"
   
   # Special chars
   enum_attr :DOT,        "."
@@ -117,9 +119,10 @@ class TokenType < Enum
   private
   
     # General types
-    enum_attr :NUMBER
+    enum_attr :INT
+    enum_attr :FLOAT
     enum_attr :L_IDENT
-    enum_attr :VAR
+    # enum_attr :VAR
     enum_attr :STRING
     enum_attr :G_IDENT
     enum_attr :EOL

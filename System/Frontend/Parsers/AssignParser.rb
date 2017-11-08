@@ -9,7 +9,7 @@ class AssignParser < TDparser
   ASSIGN_TK  = [TkType.COLON_EQ, TkType.PLUS_EQ,
                 TkType.MINUS_EQ, TkType.STAR_EQ,
                 TkType.SLASH_EQ, TkType.BSLASH_EQ,
-                TkType.MOD_EQ,   TkType.POWER_EQ]	
+                TkType.MOD_EQ,   TkType.POWER_EQ, TkType.NEW]	
 
   ASSIGN_SET = STMT_BEG_SET + STMT_MID_SET + ASSIGN_TK
 
@@ -48,6 +48,7 @@ class AssignParser < TDparser
      
      expParser = ExpressionParser.new(self)
      rSide     = expParser.parse(currentTk)
+     varNode = df
      
      case tkType
          
@@ -95,9 +96,6 @@ class AssignParser < TDparser
          root.addBranch(rSide)
          
      end
-     
-     token = currentTk
-     checkEol(token) unless token.getType == TkType.R_BRACE
      
      return root
      

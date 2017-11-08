@@ -23,3 +23,5 @@ class MySecondClass inherits MyClass {
   }
   
 }
+
+myObj := new MySecondClass

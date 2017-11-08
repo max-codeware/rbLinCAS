@@ -326,7 +326,7 @@ class ExpressionParser < TDparser
     # * **argument**: token to begin
     # * **returns**: ICode AST
     def parseAtom(token)
-    
+      
       tkType = token.getType
       
       case tkType
@@ -336,9 +336,16 @@ class ExpressionParser < TDparser
           idParser = IDparser.new(self)
           root     = idParser.parse(token)
           
-        when TkType.NUMBER
+        when TkType.INT
         
-          root = ICodeGen.generateNode(ICodeNType.NUM_CONST)
+          root = ICodeGen.generateNode(ICodeNType.INT)
+          root.setAttr(ICKey.VALUE,token.getValue)
+          
+          nextTk
+          
+        when TkType.FLOAT
+        
+          root = ICodeGen.generateNode(ICodeNType.IFLOAT)
           root.setAttr(ICKey.VALUE,token.getValue)
           
           nextTk

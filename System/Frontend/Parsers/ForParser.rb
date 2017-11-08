@@ -23,20 +23,20 @@ class ForParser < TDparser
         id = @@symTab.enterLocal(token.getText)
         id.addLineNum(token.getLine)
         var = ICodeGen.generateNode(ICodeNType.LVARIABLE)
-        var.setAttr(ICKey.ID,id)
+        var.setAttr(ICKey.ID_PATH,id.getPath)
         @@symTab.exitLocal
       when TkType.G_IDENT
         id = @@symTab.enterGlobal(token.getText)
         id.addLineNum(token.getLine)
         var = ICodeGen.generateNode(ICodeNType.GVARIABLE)
-        var.setAttr(ICKey.ID,id)
+        var.setAttr(ICKey.ID_PATH,id.getPath)
         @@symTab.exitLocal
       else
         @errHandler.flag(token,ErrCode.MISSING_ID,self)
         id = @@symTab.enterLocal("dummyVar")
         id.addLineNum(token.getLine)
         var = ICodeGen.generateNode(ICodeNType.LVARIABLE)
-        var.setAttr(ICKey.ID,id)
+        var.setAttr(ICKey.ID_PATH,id.getPath)
         @symTab.exitLocal
     end
     
@@ -44,7 +44,7 @@ class ForParser < TDparser
     forNode    = ICodeGen.generateNode(ICodeNType.COMPOUND)
     loopNode   = ICodeGen.generateNode(ICodeNType.WHILE)
     assignNode = ICodeGen.generateNode(ICodeNType.ASSIGN)
-    oneNode    = ICodeGen.generateNode(ICodeNType.NUM_CONST)
+    oneNode    = ICodeGen.generateNode(ICodeNType.INT)
     
     oneNode.setAttr(ICKey.VALUE,1)
     assignNode.addBranch(var)

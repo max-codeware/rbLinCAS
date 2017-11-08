@@ -1,0 +1,33 @@
+
+/* testing statement execution */
+
+a := 3 -5
+printl "The result is: " & a
+
+if a == -2 then {
+  print "Executed true branch"
+}
+else {
+  print "Executed false branch"
+}
+
+printl ""
+
+select a {
+
+  case 1, -2 {
+    print "Selected: 1"
+  }
+  
+  case -5 {
+    print "Selected: 2"
+  }
+}
+
+printl ""
+
+i := 0
+do {
+  printl i
+  i += 1
+} until i == 5
