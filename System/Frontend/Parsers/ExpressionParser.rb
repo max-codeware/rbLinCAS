@@ -138,11 +138,11 @@ class ExpressionParser < TDparser
       
       root = parseSubExp(token)
       
-      if tkType == TkType.NOT then
-        node = ICodeGen.generateNode(OpOpTr.getICType(tkType))
-        node.addBranch(root)
-        root = node
-      end
+      # if tkType == TkType.NOT then
+      #  node = ICodeGen.generateNode(OpOpTr.getICType(tkType))
+      #  node.addBranch(root)
+      #  root = node
+      # end
       
       token = currentTk   
       tkType = token.getType

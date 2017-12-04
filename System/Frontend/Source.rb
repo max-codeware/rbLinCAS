@@ -13,7 +13,7 @@ class Source < MessageGenerator
     @reader     = reader
     @line       = nil
     @lineNum    = 0
-    @currentPos = -2  
+    @currentPos = -1  
   end
   
   def getLine
@@ -25,15 +25,14 @@ class Source < MessageGenerator
   end
   
   def currentChar
-    if @line == nil and @currentPos != -2
+    if @line == nil and @currentPos != -1
       return EOF
-    elsif getPos == -2 or getPos > @line.size - 1
+    elsif getPos == -1 or getPos > @line.size - 1
       readLine
       return nextChar
     else
       return @line[@currentPos]
     end 
-    ensure 
   end
   
   def nextChar

@@ -25,9 +25,8 @@ select a {
 }
 
 printl ""
+printl ""
 
-i := 0
-do {
-  printl i
-  i += 1
-} until i == 5
+for i : 5 downto 1 {
+  printl "Number: " & i
+}
